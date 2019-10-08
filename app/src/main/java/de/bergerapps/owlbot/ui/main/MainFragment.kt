@@ -1,6 +1,7 @@
 package de.bergerapps.owlbot.ui.main
 
 import android.os.Bundle
+import android.text.Html
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +50,11 @@ class MainFragment : Fragment() {
             it.definitions.forEach { def ->
                 definition.text = def.definition
                 type.text = def.type
-                example.text = def.example
+                if (def.example != null) {
+                    example.text = Html.fromHtml(def.example)
+                } else {
+                    example.text = ""
+                }
                 image_url.text = def.image_url
                 Picasso.get().load(def.image_url).into(imageView)
             }
