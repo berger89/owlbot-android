@@ -1,7 +1,7 @@
 package de.bergerapps.owlbot
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import de.bergerapps.owlbot.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
