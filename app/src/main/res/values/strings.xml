@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">OwlBot</string>
+    <string name="app_name">Owlbot - Free Dictionary</string>
+    <string name="type_a_word">Type a word ...</string>
+    <string name="not_found">%1$s not found</string>
 </resources>

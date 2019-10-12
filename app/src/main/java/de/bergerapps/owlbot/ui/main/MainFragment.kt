@@ -1,19 +1,19 @@
 package de.bergerapps.owlbot.ui.main
 
 import android.os.Bundle
-import android.text.Html
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.squareup.picasso.Picasso
+import androidx.recyclerview.widget.LinearLayoutManager
 import de.bergerapps.owlbot.R
 import de.bergerapps.owlbot.rest.OwlBotResponse
 import kotlinx.android.synthetic.main.main_fragment.*
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearSnapHelper
 
 
 class MainFragment : Fragment() {
@@ -22,6 +22,7 @@ class MainFragment : Fragment() {
         fun newInstance() = MainFragment()
     }
 
+    private lateinit var adapter: DictionaryAdapter
     private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
@@ -34,6 +35,7 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        initRecyclerView()
 
         searchWordEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
@@ -47,59 +49,65 @@ class MainFragment : Fragment() {
         })
 
         viewModel.owlBotLiveData.observe(this, Observer {
-            initViews(it)
+            if (it == null) {
+                notFound.text = getString(R.string.not_found, searchWordEditText.text)
+                notFound.visibility = View.VISIBLE
+                hideViews()
+                return@Observer
+            }
+            updateRecyclerView(it)
+            notFound.visibility = View.GONE
             showViews()
         })
     }
 
-    private fun initViews(owlBotResponse: OwlBotResponse) {
-        // word
-        word.text = owlBotResponse.word
-        // pronunciation
-        pronunciation.text = owlBotResponse.pronunciation
+    private fun updateRecyclerView(owlBotResponse: OwlBotResponse?) {
+        adapter.update(owlBotResponse!!)
+        pageIndicator.attachTo(recyclerView)
+    }
 
-        // definition
-        owlBotResponse.definitions.forEach { def ->
-            definition.text = def.definition
-            // example
-            if (def.example != null && def.example.isNotEmpty()) {
-                example.text = Html.fromHtml(def.example)
-            } else {
-                example.text = ""
-            }
-            // type
-            if (def.type != null && def.type.isNotEmpty()) {
-                word.text = word.text as String + " (" + def.type + ")"
-            }
-            // image_url
-            image_url.text = def.image_url
-            if (def.image_url != null && def.image_url.isNotEmpty()) {
-                imageView.imageTintList = null
-                Picasso.get().load(def.image_url).into(imageView)
-            }
-            else{
-                imageView.setColorFilter(ContextCompat.getColor(context!!, R.color.colorSecond), android.graphics.PorterDuff.Mode.SRC_IN);
-                Picasso.get().load(R.drawable.owlbot).into(imageView)
-            }
-        }
+    private fun initRecyclerView() {
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter = DictionaryAdapter(OwlBotResponse(), context!!)
+        recyclerView.adapter = adapter
+        val linearSnapHelper = SnapHelperOneByOne()
+        linearSnapHelper.attachToRecyclerView(recyclerView)
+
+        pageIndicator.attachTo(recyclerView)
     }
 
     private fun showViews() {
-        word.visibility = View.VISIBLE
-        pronunciation.visibility = View.VISIBLE
-        definition.visibility = View.VISIBLE
-        example.visibility = View.VISIBLE
-        image_url.visibility = View.VISIBLE
-        imageView.visibility = View.VISIBLE
+        recyclerView.visibility = View.VISIBLE
+        pageIndicator.visibility = View.VISIBLE
     }
 
     private fun hideViews() {
-        word.visibility = View.INVISIBLE
-        pronunciation.visibility = View.INVISIBLE
-        definition.visibility = View.INVISIBLE
-        example.visibility = View.INVISIBLE
-        image_url.visibility = View.INVISIBLE
-        imageView.visibility = View.INVISIBLE
+        recyclerView.visibility = View.GONE
+        pageIndicator.visibility = View.GONE
+    }
+
+    inner class SnapHelperOneByOne : LinearSnapHelper() {
+
+        override fun findTargetSnapPosition(
+            layoutManager: RecyclerView.LayoutManager?,
+            velocityX: Int,
+            velocityY: Int
+        ): Int {
+
+            if (layoutManager !is RecyclerView.SmoothScroller.ScrollVectorProvider) {
+                return RecyclerView.NO_POSITION
+            }
+
+            val currentView = findSnapView(layoutManager) ?: return RecyclerView.NO_POSITION
+
+            val currentPosition = layoutManager.getPosition(currentView)
+
+            return if (currentPosition == RecyclerView.NO_POSITION) {
+                RecyclerView.NO_POSITION
+            } else currentPosition
+
+        }
     }
 
 }

@@ -40,6 +40,8 @@ class RestAPI {
                     ) {
                         if (response?.body() != null)
                             data.value = response!!.body()!!
+                        else
+                            data.value = null
                     }
 
                 })
