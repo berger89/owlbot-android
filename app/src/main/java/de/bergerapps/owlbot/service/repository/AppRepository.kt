@@ -1,7 +1,8 @@
-package de.bergerapps.owlbot.rest
+package de.bergerapps.owlbot.service.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import de.bergerapps.owlbot.service.model.OwlBotResponse
 import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback

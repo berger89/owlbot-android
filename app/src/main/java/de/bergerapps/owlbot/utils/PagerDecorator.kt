@@ -1,4 +1,4 @@
-package de.bergerapps.owlbot.ui.main
+package de.bergerapps.owlbot.utils
 
 import android.graphics.Canvas
 import android.graphics.Color

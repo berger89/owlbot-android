@@ -2,8 +2,8 @@ package de.bergerapps.owlbot.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import de.bergerapps.owlbot.rest.OwlBotResponse
-import de.bergerapps.owlbot.rest.RestAPI
+import de.bergerapps.owlbot.service.model.OwlBotResponse
+import de.bergerapps.owlbot.service.repository.RestAPI
 
 class MainViewModel : ViewModel() {
     val owlBotLiveData = MutableLiveData<OwlBotResponse>()

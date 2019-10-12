@@ -11,8 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import de.bergerapps.owlbot.R
-import de.bergerapps.owlbot.rest.OwlBotDefinitionResponse
-import de.bergerapps.owlbot.rest.OwlBotResponse
+import de.bergerapps.owlbot.service.model.OwlBotResponse
 import kotlinx.android.synthetic.main.dictionary_item.view.*
 
 class DictionaryAdapter(
@@ -47,7 +46,7 @@ class DictionaryAdapter(
     private fun initViews(
         viewHolder: ViewHolder,
         owlBotResponse: OwlBotResponse,
-        def: OwlBotDefinitionResponse
+        def: OwlBotResponse.OwlBotDefinitionResponse
     ) {
         // word
         viewHolder.word.text = owlBotResponse.word

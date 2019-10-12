@@ -1,5 +1,6 @@
-package de.bergerapps.owlbot.rest
+package de.bergerapps.owlbot.service.repository
 
+import de.bergerapps.owlbot.service.model.OwlBotResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers

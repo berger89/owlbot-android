@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import de.bergerapps.owlbot.R
-import de.bergerapps.owlbot.rest.OwlBotResponse
+import de.bergerapps.owlbot.service.model.OwlBotResponse
 import kotlinx.android.synthetic.main.main_fragment.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearSnapHelper
