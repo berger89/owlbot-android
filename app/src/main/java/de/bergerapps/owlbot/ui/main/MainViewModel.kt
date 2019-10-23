@@ -1,5 +1,6 @@
 package de.bergerapps.owlbot.ui.main
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.bergerapps.owlbot.service.model.OwlBotResponse
@@ -11,11 +12,11 @@ class MainViewModel : ViewModel() {
 
     private val restAPI = RestAPI()
 
-    fun getDictionary(dictionary: String) {
+    fun getDictionary(context: Context, dictionary: String) {
         if (lastString == dictionary) {
             return
         }
         lastString = dictionary
-        restAPI.getDictionary(owlBotLiveData, dictionary.toLowerCase())
+        restAPI.getDictionary(context, owlBotLiveData, dictionary.toLowerCase())
     }
 }

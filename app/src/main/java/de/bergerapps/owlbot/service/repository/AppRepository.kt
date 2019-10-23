@@ -1,5 +1,6 @@
 package de.bergerapps.owlbot.service.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import de.bergerapps.owlbot.service.model.OwlBotResponse
@@ -9,6 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class RestAPI {
 
@@ -24,12 +26,16 @@ class RestAPI {
     }
 
     fun getDictionary(
+        context: Context,
         data: MutableLiveData<OwlBotResponse>,
         dictionary: String
     ) {
+        val properties = Properties()
+        properties.load(context.assets.open("auth.properties"))
+        val token = properties.getProperty("token")
         doAsync {
 
-            owlBotService.getDictionary(dictionary)
+            owlBotService.getDictionary(dictionary, token)
                 .enqueue(object : Callback<OwlBotResponse> {
                     override fun onFailure(call: Call<OwlBotResponse>?, t: Throwable?) {
                         Log.v("retrofit", "call failed")

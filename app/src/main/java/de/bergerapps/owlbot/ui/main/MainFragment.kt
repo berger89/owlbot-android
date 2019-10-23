@@ -1,22 +1,22 @@
 package de.bergerapps.owlbot.ui.main
 
+import android.app.Activity
 import android.os.Bundle
+import android.os.IBinder
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import de.bergerapps.owlbot.R
 import de.bergerapps.owlbot.service.model.OwlBotResponse
 import kotlinx.android.synthetic.main.main_fragment.*
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.LinearSnapHelper
-import android.app.Activity
-import android.os.IBinder
-import android.view.inputmethod.InputMethodManager
 
 
 class MainFragment : Fragment(), View.OnKeyListener {
@@ -61,7 +61,9 @@ class MainFragment : Fragment(), View.OnKeyListener {
         if (event!!.action and KeyEvent.ACTION_DOWN == 0 && keyCode == KeyEvent.KEYCODE_ENTER) {
             hideKeyboard(view!!.windowToken)
             hideViews()
-            viewModel.getDictionary(searchWordEditText.text.toString())
+            context.let {
+                viewModel.getDictionary(context!!, searchWordEditText.text.toString())
+            }
             return true
         }
         return false
