@@ -14,9 +14,12 @@ import de.bergerapps.owlbot.service.model.OwlBotResponse
 import kotlinx.android.synthetic.main.main_fragment.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearSnapHelper
+import android.app.Activity
+import android.os.IBinder
+import android.view.inputmethod.InputMethodManager
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), View.OnKeyListener {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -34,20 +37,9 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        // init viewmodel
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        initRecyclerView()
-
-        searchWordEditText.setOnKeyListener(object : View.OnKeyListener {
-            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-                if (event.action and KeyEvent.ACTION_DOWN == 0 && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    hideViews()
-                    viewModel.getDictionary(searchWordEditText.text.toString())
-                    return true
-                }
-                return false
-            }
-        })
-
         viewModel.owlBotLiveData.observe(this, Observer {
             if (it == null) {
                 notFound.text = getString(R.string.not_found, searchWordEditText.text)
@@ -59,6 +51,26 @@ class MainFragment : Fragment() {
             notFound.visibility = View.GONE
             showViews()
         })
+
+        // init views
+        searchWordEditText.setOnKeyListener(this)
+        initRecyclerView()
+    }
+
+    override fun onKey(p0: View?, keyCode: Int, event: KeyEvent?): Boolean {
+        if (event!!.action and KeyEvent.ACTION_DOWN == 0 && keyCode == KeyEvent.KEYCODE_ENTER) {
+            hideKeyboard(view!!.windowToken)
+            hideViews()
+            viewModel.getDictionary(searchWordEditText.text.toString())
+            return true
+        }
+        return false
+    }
+
+    private fun hideKeyboard(windowToken: IBinder) {
+        (context?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            windowToken, 0
+        )
     }
 
     private fun updateRecyclerView(owlBotResponse: OwlBotResponse?) {

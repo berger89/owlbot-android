@@ -69,6 +69,7 @@ class DictionaryAdapter(
         viewHolder.imageUrl.text = def.image_url
         if (def.image_url != null && def.image_url.isNotEmpty()) {
             viewHolder.imageView.imageTintList = null
+            viewHolder.imageView.colorFilter = null
             Picasso.get().load(def.image_url).into(viewHolder.imageView)
         } else {
             viewHolder.imageView.setColorFilter(
